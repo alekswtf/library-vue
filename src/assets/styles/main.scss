@@ -1,0 +1,17 @@
+@import "./helpers/reset.scss";
+@import "./helpers/typography.scss";
+@import "./helpers/variables.scss";
+@import "./helpers/mixins.scss";
+@import "./helpers/breakpoints.scss";
+
+* {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
+  
+#app {
+    max-width: 1440px;
+    min-width: 768px;
+    margin: 0 auto;
+}
+
