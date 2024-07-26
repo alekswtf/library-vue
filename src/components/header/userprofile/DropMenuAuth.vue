@@ -14,12 +14,13 @@
 
         <Overlay :isVisible="showMyProfile" 
              @close="showMyProfile = false"
+             :user="user"
              >
             <MyProfile 
             :isVisible="showMyProfile"
             :user="loggedInUser" 
             @close="showMyProfile = false" 
-            
+            @update:user="user = $event"
             />
           </Overlay>
     </div>
@@ -34,6 +35,9 @@ import { mapState, mapActions } from 'vuex'
         components: {
             MyProfile,
             Overlay
+        },
+        props: {
+			user: {}
         },
         data() {
             return {

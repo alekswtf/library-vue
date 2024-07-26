@@ -64,10 +64,29 @@
 				required: true
 			},
 		},
+
+		created() {
+
+			const userKey = `user-${this.user.userEmail}`;
+			const userCounter = localStorage.getItem(userKey);
+
+			if (userCounter) {
+				this.user.visits = parseInt(userCounter);
+			}
+		},
+		
 		methods: {
 			closeModal() {
-				this.$emit('close');
-				
+				this.$emit('close');			
+			}
+		},
+
+		beforeUpdate() {
+			const userKey = `user-${this.user.userEmail}`;
+			const userCounter = localStorage.getItem(userKey);
+
+			if (userCounter) {
+			this.user.visits = parseInt(userCounter);
 			}
 		}
 }

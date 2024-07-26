@@ -3,7 +3,7 @@
         <div class="modal-overlay" v-if="isVisible" 
         @click="closeOverlay" 
         >
-            <slot></slot>
+            <slot :user="user"></slot>
         </div>
 
     </transition>
@@ -16,7 +16,11 @@
             isVisible: {
                 type: Boolean,
                 required: true
-            }
+            },
+            user: {
+                type: Object,
+                default: () => ({}),
+            },
     },
         methods: {
             closeOverlay() {

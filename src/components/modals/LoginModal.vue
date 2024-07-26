@@ -1,9 +1,12 @@
 <template>
     <Overlay :isVisible="isVisible" 
     @close="closeModal"
+    :user="user"
     >
 
-        <div class="modal" @click.stop>
+        <div class="modal" 
+        :user="loggedInUser"
+        @click.stop>
           <div class="modal-content-login">
             <span class="close" @click="closeModal">
               <img src="../../assets/icons/close_btn.svg" alt="closeBtn">
@@ -49,6 +52,10 @@
       isVisible: {
         type: Boolean,
         required: true,
+      },
+      user: {
+        type: Object,
+        default: () => ({}),
       }
     },  
 
@@ -75,7 +82,24 @@
         alert('Login successful!');
         this.$store.commit('setIsAuthenticated', true);
         /* this.$emit('update:isAuthenticated', true) */
+
+      //счетчик входа в аккаунт.
+      
+        const userKey = `user-${user.userEmail}`;
+        let userCounter = localStorage.getItem(userKey);
+
+        if (userCounter) {
+          user.visits = parseInt(userCounter);
+          user.visits++;
+        } else {
+          user.visits = 1;
+        }
+
+        localStorage.setItem(userKey, user.visits);
         localStorage.setItem('loggedInUser', JSON.stringify(user));
+
+        this.$emit('update:user', user);
+
       } else {
         alert('Invalid email or password.');
       }
