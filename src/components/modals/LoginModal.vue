@@ -85,28 +85,27 @@
 
       //счетчик входа в аккаунт.
       
-        const userKey = `user-${user.userEmail}`;
-        let userCounter = localStorage.getItem(userKey);
+        const USER_KEY = `user-${user.userEmail}`;
+        let userCounter = localStorage.getItem(USER_KEY);
 
         if (userCounter) {
-          user.visits = parseInt(userCounter);
+          user.visits = parseInt(userCounter, 10);
           user.visits++;
         } else {
           user.visits = 1;
         }
 
-        localStorage.setItem(userKey, user.visits);
+        localStorage.setItem(USER_KEY, user.visits.toString());
         localStorage.setItem('loggedInUser', JSON.stringify(user));
 
         this.$emit('update:user', user);
+        this.closeModal();
 
       } else {
         alert('Invalid email or password.');
-      }
-
-      this.closeModal();
         this.userEmail = '';
         this.password = '';
+      }
     },
 
       switchToRegister() {

@@ -16,7 +16,7 @@
 				<div class="myProfile-visits">
 					<h4>Visits</h4>
 					<img src="../../../assets/icons/Union.svg" alt="union">
-					<span class="visitsCounter">{{ user.visits }}</span>
+					<span class="visitsCounter">{{ userCounter }}</span>
 				</div>
 				<div class="myProfile-bonuses">
 					<h4>Bonuses</h4>
@@ -33,7 +33,8 @@
 			<div class="myProfile-rented">
 				<h3>Rented books</h3>
 				<ul class="rentedBooks">
-					{{ user.rentedBooks }}
+					
+					<li v-for="book in user.rentedBooks" :key="book">{{ book }}</li>
 				<li>The Last Queen, Clive Irving</li>
 				<li>Dominicana, Angie Cruz</li>
 				</ul>
@@ -51,45 +52,53 @@
 </template>
 
 <script>
+export default {
+	data() {
+		return {
+			userCounter: 0,
+		};
+},
 
-    export default {
+  props: {
+    user: {
+      type: Object,
+      default: () => ({}),
+    },
+    isVisible: {
+      type: Boolean,
+      required: true
+    },
+  },
 
-        props: {
-			user: {
-			type: Object,
-			default: () => ({}),
-			},
-			isVisible: {
-				type: Boolean,
-				required: true
-			},
-		},
 
-		created() {
+  created() {
+    this.updateUserVisits();
+  },
 
-			const userKey = `user-${this.user.userEmail}`;
-			const userCounter = localStorage.getItem(userKey);
+  methods: {
+    closeModal() {
+      this.$emit('close');
+    },
 
-			if (userCounter) {
-				this.user.visits = parseInt(userCounter);
-			}
-		},
-		
-		methods: {
-			closeModal() {
-				this.$emit('close');			
-			}
-		},
+    updateUserVisits() {
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (loggedInUser && loggedInUser.visits) {
+        this.userCounter = loggedInUser.visits;
+      } else {
+        console.warn('No visits data found in loggedInUser');
+      }
+    }
+},
 
-		beforeUpdate() {
-			const userKey = `user-${this.user.userEmail}`;
-			const userCounter = localStorage.getItem(userKey);
-
-			if (userCounter) {
-			this.user.visits = parseInt(userCounter);
-			}
-		}
-}
+  watch: {
+    user: {
+      handler(newUser) {
+        this.updateUserVisits();
+      },
+      deep: true
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>

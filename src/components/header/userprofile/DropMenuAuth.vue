@@ -14,13 +14,12 @@
 
         <Overlay :isVisible="showMyProfile" 
              @close="showMyProfile = false"
-             :user="user"
              >
             <MyProfile 
             :isVisible="showMyProfile"
             :user="loggedInUser" 
             @close="showMyProfile = false" 
-            @update:user="user = $event"
+            @update:user="updateUser"
             />
           </Overlay>
     </div>
@@ -39,19 +38,26 @@ import { mapState, mapActions } from 'vuex'
         props: {
 			user: {}
         },
+
         data() {
             return {
                 showMyProfile: false,
+                loggedInUser: {}
             }
         },
+
         computed: {
             ...mapState(['isAuthenticated']),
         },
+
         methods: {
             openMyProfile() {
                 this.showMyProfile = true;
             },
             ...mapActions(['logout']),
+            
+                updateUser(updatedUser) {
+                this.loggedInUser = updatedUser;
 /*             logout() {
                 localStorage.removeItem('loggedInUser');
                 this.$store.commit('update:isAuthenticated', false);
@@ -60,6 +66,7 @@ import { mapState, mapActions } from 'vuex'
             } */
         }
     }
+ }   
 </script>
 
 <style lang="scss" scoped>
