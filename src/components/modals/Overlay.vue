@@ -47,16 +47,17 @@
   }
 
   .fade-overlay-enter-active, .fade-overlay-leave-active {
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out,
+    transform 0.5s ease-in-out;
   }
   
   .fade-overlay-enter {
-    transform: translateY(-100%);
+
     opacity: 0;
   }
   
   .fade-overlay-leave-to {
-    transform: translateY(100%);
+
     opacity: 0;
   }
 </style>

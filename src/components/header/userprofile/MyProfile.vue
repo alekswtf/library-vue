@@ -5,10 +5,10 @@
 			<img src="../../../assets/icons/close_btn.svg" alt="closeBtn">
 			</span>
 			<div class="userProfile">
-			<div class="userAvatar">
-				<img src="../../../assets/icons/avatar.png" alt="avatar">
+			<div class="userAvatar">{{ userAvatar }}
+				<!-- <img src="../../../assets/icons/avatar.png" alt="avatar"> -->
 			</div>
-			<div class="userFullName">{{ user.fullName }}</div>          
+			<div class="userFullName">{{ userFullName }}</div>          
 			</div>
 			<div class="myProfile-info">
 				<h2>MY PROFILE</h2>
@@ -41,8 +41,8 @@
 			</div>
 			<div class="myProfile-cardNumber">
 				<h4>Card number</h4>
-				<span class="userCardNumber">{{ user.cardNumber }}</span>
-				<img src="../../../assets/icons/icon copy.svg" alt="copyIcon">
+				<span class="userCardNumber">{{ userCardNumber }}</span>
+				<img src="../../../assets/icons/icon copy.svg" alt="copyIcon" @click="copyCardNumber">
 			</div>
 			</div>
 		</div>
@@ -52,11 +52,15 @@
 </template>
 
 <script>
+
 export default {
 	data() {
 		return {
 			userCounter: 0,
-		};
+			userCardNumber: '',
+			userFullName: '',
+			userAvatar:''
+		}
 },
 
   props: {
@@ -73,6 +77,8 @@ export default {
 
   created() {
     this.updateUserVisits();
+	this.updateUserCardNumber();
+	this.updateUserFullName();
   },
 
   methods: {
@@ -87,18 +93,51 @@ export default {
       } else {
         console.warn('No visits data found in loggedInUser');
       }
-    }
+    },
+
+	updateUserCardNumber() {
+			const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+			if (loggedInUser && loggedInUser.cardNumber) {
+				this.userCardNumber = loggedInUser.cardNumber;
+			} else {
+				console.warn('No cardNumber data found in loggedInUser');
+			}
+		},
+
+		copyCardNumber() {
+			navigator.clipboard.writeText(this.userCardNumber)
+				.then(() => {
+					console.log('Card number copied!');
+				})
+				.catch(err => {
+					console.error('Failed to copy card number:', err);
+				});
+		},
+
+		updateUserFullName() {
+			const userData = JSON.parse(localStorage.getItem('loggedInUser'));
+			if (userData && userData.userFirstName && userData.userLastName) {
+				this.userFullName = `${userData.userFirstName} ${userData.userLastName}`;
+				this.userAvatar = `${userData.userFirstName[0]}${userData.userLastName[0]}`.toUpperCase();
+			} else {
+				console.warn('No fullName data found in localStorage');
+			}
+		}
+		
 },
 
   watch: {
     user: {
       handler(newUser) {
         this.updateUserVisits();
+		this.updateUserCardNumber();
+		this.updateUserFullName();
       },
       deep: true
     }
   }
 };
+
 </script>
 
 <style lang="scss" scoped>
@@ -141,6 +180,18 @@ export default {
 			color: $black-color;
 			text-align: center;
 	}
+	.userAvatar {
+		width: 80px;
+		height: 80px;
+		background-color: $white-color;
+		color: $brown-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-family: $inter;
+		font-weight: 400;
+		line-height: 100%;
+	}
 }
 
 .myProfile-info {
@@ -151,7 +202,7 @@ export default {
     flex-direction: column;
 	justify-content: space-around;
 	padding: 40px;
-	gap: 40px;
+	gap: 30px;
 	text-align: left;
 	h2 {
 		font-family: $forum;

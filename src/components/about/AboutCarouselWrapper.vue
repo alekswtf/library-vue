@@ -47,7 +47,6 @@
               { id: 5, name: 'img5', img: 'image_5.png' },
             ],
             currentPage: 0,
-            slideWidth: 33.6,
             slidesPerPage: 3
           }
         },
@@ -63,13 +62,15 @@
           totalPages() {
             return Math.ceil(this.sliderItems.length / this.slidesPerPage)
           },
-          slideWidth() { 
-            if (window.innerWidth <= 768) { 
-              return 100 
-            } else { 
-              return 33.6
-            } 
-          }
+          slideWidth() {
+            return 100 / this.slidesPerPage;
+          },
+          slidePerPage() {
+            return this.isMobile ? 5 : 3;
+          },
+          isMobile() {
+            return window.innerHeight <= 768;
+          } 
         }, 
 
         methods: {
@@ -86,10 +87,8 @@
               updateSlidesPerPage() {
                 if (window.innerWidth <= 768) {
                   this.slidesPerPage = 1;
-                  this.slideWidth = 100;
                 } else {
                   this.slidesPerPage = 3;
-                  this.slideWidth = 33.6;
                 }
               }
         }

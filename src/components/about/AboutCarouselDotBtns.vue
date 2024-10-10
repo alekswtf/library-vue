@@ -13,32 +13,34 @@
 
 
 export default {
+      props: {
+            currentPage: {
+              type: Number,
+              default: 0
+            },
+            totalPages: { 
+              type: Number, 
+              default: 0 
+            }
+          },
       data() {
         return {
           pages: []
         }
       },
       created() {
-          window.addEventListener('resize', this.handleResize);
           this.handleResize();
+          window.addEventListener('resize', this.handleResize);
         },
         beforeDestroy() {
           window.removeEventListener('resize', this.handleResize);
         },
-      props: {
-        currentPage: {
-          type: Number,
-          default: 0
-        },
-        totalPages: { 
-          type: Number, 
-          default: 0 
-        }
-      },
+
         methods: {
           goToPage(page) {
             this.$emit('update:currentPage', page )
           },
+          
           handleResize() {
             if (window.innerWidth <= 768) {
               this.slidesPerPage = 1;
@@ -49,16 +51,15 @@ export default {
             }
           }
         },
-
-        computed: { 
-          slideWidth() { 
-            if (window.innerWidth <= 768) { 
-              return 100 / this.slidesPerPage;
-              } else {
-              return 33.6
-              } 
+              watch: {
+          totalPages: {
+            immediate: true,
+            handler() {
+              this.updatePages();
+            }
           }
-      }
+        },
+
 }
 </script>
 

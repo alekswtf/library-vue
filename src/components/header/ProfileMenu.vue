@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 <div class="user-profile-badge-wrapper" v-click-outside="closeProfileMenu">
     <div 
     class="user-profile-badge" 
@@ -6,59 +6,88 @@
     >
     <img src="../../assets/icons/icon_profile.svg" alt="iconProfile">
     </div>
+
     <transition name="fade-slide" class="menu-wrapper">
         <div v-if="isMenuOpen">
-            <DropMenuNoAuth 
-            v-if="!isAuthenticated" 
-            />
-            <DropMenuAuth 
-            v-else @closeProfileMenu="closeProfileMenu" 
-            />
+            <DropMenu/>  // :closeProfileMenu="closeProfileMenu" 
         </div>
-        <!-- <component 
-        :is="currentMenu" 
-        v-if="isMenuOpen" 
-        :is-authenticated="isAuthenticated"
-        @closeMenu="closeProfileMenu"
-        @update:isAuthenticated="setIsAuthenticated"
-        /> -->
     </transition>
 </div>
+</template> -->
+
+<template>
+    <div class="user-profile-badge-wrapper" v-click-outside="closeProfileMenu">
+        <div @click="toggleMenu">
+            
+            <div v-if="isAuthenticated" class="user-initials">
+                {{ userInitials }}
+            </div>
+
+            <div v-else class="user-profile-badge" >
+                <img src="../../assets/icons/icon_profile.svg" alt="iconProfile">
+            </div>
+        </div>
+        <transition name="fade-slide" class="menu-wrapper">
+            <div v-if="isMenuOpen">
+                <DropMenu/>
+            </div>
+        </transition>
+    </div>
 </template>
+
 
 <script>
 import { mapState } from 'vuex'
-import DropMenuNoAuth from '@/components/header/userprofile/DropMenuNoAuth';
-import DropMenuAuth from '@/components/header/userprofile/DropMenuAuth';
-
+import DropMenu from '@/components/header/userprofile/DropMenu';
 
     export default {
         components: {
-            DropMenuNoAuth,
-            DropMenuAuth
+            DropMenu
         },
+
         data() {
             return {
                 isMenuOpen: false,
+                userInitials:'',
             }
         },
+
         computed: {
-            ...mapState(['isAuthenticated']),
-/*             currentMenu() {
-                return this.isAuthenticated ? 'DropMenuAuth' : 'DropMenuNoAuth';
-            } */
-        },    
-            methods: {
-                toggleMenu() {
+            ...mapState(['isAuthenticated','loggedInUser'])
+        },  
+
+        methods: {
+            toggleMenu() {
                     this.isMenuOpen = !this.isMenuOpen;
                 },
-                closeProfileMenu() {
+            closeProfileMenu() {
                     this.isMenuOpen = false;
                 },
-/*                 setIsAuthenticated(authenticated) {
-                    this.isAuthenticated = authenticated;
-                }, */
+
+            setUserInitials() {
+                const userData = JSON.parse(localStorage.getItem('loggedInUser'));
+                if (userData && userData.userFirstName && userData.userLastName) {
+                    this.userInitials = `${userData.userFirstName[0]}${userData.userLastName[0]}`.toUpperCase();
+                } else {
+                    console.log('Smth wrong');
+                }
             }
+        },
+
+        created() {
+            this.setUserInitials();
+        },
+
+        watch: {
+            isAuthenticated: {
+                user: true,
+                handler(newUser) {
+                    if (newUser) {
+                        this.setUserInitials();
+                    }
+                }
+            }
+        }
 }
 </script>
 
@@ -73,14 +102,34 @@ import DropMenuAuth from '@/components/header/userprofile/DropMenuAuth';
     height: 28px;
 
     &:hover {
+        cursor: pointer;
         background-color: $brown-color;
     }
 }
+
+.user-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-family: $inter;   
+    font-size: 15px;
+    line-height: 133%;
+    background-color: $white-color;
+    color: $brown-color;
+    text-transform: uppercase;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
 .menu-wrapper {
     position: absolute;
-    top: 100%; /* Example positioning */
+    top: 100%; 
     right: 0;
-    width: 200px; /* Adjust as needed */
+    width: 200px; 
   }
 
   .fade-slide-enter-active, .fade-slide-leave-active {

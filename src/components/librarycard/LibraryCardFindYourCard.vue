@@ -8,7 +8,7 @@
                   <div class="card-input">
                     <input class="card-input-field" type="text" value="" name="readerName" id="readers-name" placeholder="Reader's name" required >
 
-                    <input class="card-input-field" type="number" value="" name="cardNumber" id="card-number" placeholder="Card number" required >
+                    <input class="card-input-field" type="number/text" value="" name="cardNumber" id="card-number" placeholder="Card number" required >
                   </div>       
               </div>
   

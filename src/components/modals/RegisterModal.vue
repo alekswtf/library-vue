@@ -10,18 +10,18 @@
             </span>
             <h2>Register</h2>
             <form @submit.prevent="handleRegister">
-              <label for="userFirstnameReg">First name</label>
+              <label for="userFirstNameReg">First name</label>
               <input 
               type="text" 
-              id="userFirstnameReg" 
-              name="userFirstname" 
-              v-model="userFirstname" required>
-              <label for="userLastnameReg">Last name</label>
+              id="userFirstNameReg" 
+              name="userFirstName" 
+              v-model="userFirstName" required>
+              <label for="userLastNameReg">Last name</label>
               <input 
               type="text" 
-              id="userLastnameReg" 
-              name="userLastname" 
-              v-model="userLastname" required>
+              id="userLastNameReg" 
+              name="userLastName" 
+              v-model="userLastName" required>
               <label for="userEmailReg">E-mail</label>
               <input 
               type="email" 
@@ -63,8 +63,8 @@
 
     data() {
       return {
-        userFirstname: '',
-        userLastname: '',
+        userFirstName: '',
+        userLastName: '',
         userEmail: '',
         password: '',
       }
@@ -83,25 +83,34 @@
         alert('Email already registered! Please use another.');
       } else {
         const newUser = {
-          userFirstname: this.userFirstname,
-          userLastname: this.userLastname,
+          userFirstName: this.userFirstName,
+          userLastName: this.userLastName,
           userEmail: this.userEmail,
-          password: this.password
+          password: this.password,
+          cardNumber: this.generateCardNumber()
         };
 
         users.push(newUser);
         localStorage.setItem('registeredUsers', JSON.stringify(users));
 
         alert('Registration successful!');
-        console.log('Registering with:', this.userFirstname, this.userLastname, this.userEmail, this.password);
+        console.log('Registering with:', this.userFirstName, this.userLastName, this.userEmail, this.password);
         this.closeModal();
       }
-        this.userFirstname = '';
-        this.userLastname = '';
+        this.userFirstName = '';
+        this.userLastName = '';
         this.userEmail = '';
         this.password = '';
-      
-    },
+       },
+       generateCardNumber() {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < 9; i++) {
+          result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+       },
+
 
     switchToLogin() {
       this.$emit('switchToLogin');
