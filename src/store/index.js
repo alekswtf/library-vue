@@ -9,12 +9,15 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isAuthenticated: false,
+    isAuthenticated: JSON.parse(localStorage.getItem('isAuthenticated')) || false, //
   },
   getters: {
+    isAuthenticated: state => state.isAuthenticated, //
   },
   mutations: {
     setIsAuthenticated(state, isAuthenticated) {
       state.isAuthenticated = isAuthenticated;
+      localStorage.setItem('isAuthenticated', JSON.stringify(isAuthenticated)); //
     },
   },
   actions: {

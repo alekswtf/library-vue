@@ -1,7 +1,13 @@
 <template>
-    <div class="buyCard">
+	<Overlay :isVisible="isVisible" 
+    @close="closeModal"
+    :user="user">
+
+    <div class="buyCard" @click.stop>
         <h2>Buy a library card</h2>
-        <span><img src="../../assets/icons/close_btn_white.svg" alt="closeBtn"></span>
+        <span class="close" @click="closeModal">
+			<img src="../../../assets/icons/close_btn_white.svg" alt="closeBtn">
+		</span>
         
         <div class="buyCard-wrapper">
           <form action="#" method="get" class="buyCardForm">
@@ -42,18 +48,45 @@
           
         </div>
       </div>
+</Overlay>
 </template>
 
 <script>
+import Overlay from '@/components/modals/Overlay.vue'
+
     export default {
-        
-    }
+		components: {
+			Overlay
+			},
+		props: {
+			isVisible: {
+				type: Boolean,
+				required: true,
+			},
+			user: {
+				type: Object,
+				default: () => ({}),
+			}
+		},  
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+			closeModal() {
+				this.$emit('close');
+			}
+		},
+
+}
 </script>
 
 <style lang="scss" scoped>
 .buyCard {
 	padding: 0 0 10px;
 	min-height: 540px;
+	min-width: 650px;
 	position: fixed;
     top: 50%;
     left: 50%;
@@ -63,7 +96,6 @@
     letter-spacing: 0.02em;
     font-family: $inter;
 	background-color: $white-color;
-	display: none;
 	img {
 		position: absolute;
 		top: 20px;
@@ -87,7 +119,7 @@
 .buyCard-wrapper {
 	display: flex;
     flex-direction: row;
-    gap: 40px;
+    gap: 20px;
 	form {
 		display: flex;
 		flex-direction: column;
@@ -116,7 +148,7 @@
 }
 .buyCard-expirationCode {
 	display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
 	gap: 10px;
 	#expirationCodeMonth, #expirationCodeYear {
@@ -149,9 +181,10 @@
 }
 
 .buyCardInfo {
-	width: 330px;
+	width: 329px;
 	height: 160px;
 	margin-top: 30px;
+	text-align: left;
 	p {
 		font-family: $inter;
 		font-size: 15px;

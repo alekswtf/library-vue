@@ -7,39 +7,126 @@
             <h4>{{ title }}</h4>
 			<h5>{{ author }}</h5>
             <p>{{ description }}</p>
-            <button class="card-button">Buy</button>
+            <button  class="card-button" @click="handleBuyClick">Buy</button> 
+			<!-- <button  class="card-button-own" @click="openBuyCard">Own</button> -->
         </div>
         <img :src="image" :alt="title">
         </div>
+
+		<LoginModal
+            :isVisible="showLoginModal"
+            @close="closeLoginModal"
+            @switchToRegister="switchToRegister"
+            @update:isAuthenticated="handleAuthentication"
+        />
+
+		<RegisterModal
+            :isVisible="showRegisterModal"
+            @close="closeRegisterModal"
+            @switchToLogin="switchToLogin"
+        />
+
+		<BuyCard :isVisible="showBuyCard"
+		@close="closeBuyCard"
+		/>
     </div>
+
+		
+
   </template>
   
   <script>
+  import BuyCard from '@/components/favorites/books/BuyALibraryCard.vue'
+  import LoginModal from '@/components/modals/LoginModal.vue'
+  import RegisterModal from '@/components/modals/RegisterModal'
+  import { mapState } from 'vuex';
+
   export default {
-	
-    props: {
-		staff: {
-			type: String,
-        	required: true
+		components: {
+			BuyCard,
+			LoginModal,
+			RegisterModal
+			},
+
+		props: {
+			staff: {
+				type: String,
+				required: true
+			},
+			title: {
+				type: String,
+				required: true
+			},
+			author: {
+				type: String,
+				required: true
+			},
+			description: {
+				type: String,
+				required: true
+			},
+			image: {
+				type: String,
+				required: true
+			},
 		},
-		title: {
-			type: String,
-			required: true
+
+		data() {
+			return {
+				showBuyCard: false,
+				showLoginModal: false,
+				showRegisterModal: false
+			}
 		},
-		author: {
-			type: String,
-			required: true
+
+		methods: {
+			handleBuyClick() {
+				console.log('handleBuyClick called');
+				if (this.isAuthenticated) {
+					this.openBuyCard();
+				} else {
+					this.openLoginModal();
+				}
+			},
+			openBuyCard() {
+				this.showBuyCard = true;
+			},
+			closeBuyCard() {
+				this.showBuyCard = false;
+			},
+			openLoginModal() {
+				this.showLoginModal = true;
+			},
+			closeLoginModal() {
+				this.showLoginModal = false;
+			},
+			switchToRegister() {
+				this.showLoginModal = false;
+				this.showRegisterModal = true;
+			},
+			switchToLogin() {
+				this.showRegisterModal = false;
+				this.showLoginModal = true;
+			},
+			closeRegisterModal() {
+				this.showRegisterModal = false;
+			},
+			handleAuthentication(isAuthenticated) {
+				this.$store.commit('setAuthenticated', isAuthenticated);
+				if (isAuthenticated) {
+					this.closeLoginModal();
+					this.openBuyCard();
+				}
+			}
 		},
-		description: {
-			type: String,
-			required: true
+
+		computed: {
+			...mapState(['isAuthenticated']),
+			...mapState(['loggedInUser']),
 		},
-		image: {
-			type: String,
-			required: true
-		}
-    }
+
 }
+
   </script>
   
   <style lang="scss" scoped>
@@ -128,6 +215,10 @@
 }
 .card-button {
     @include button-styles;
+	margin-top: 20px;
+}
+.card-button-own {
+	@include button-styles-own;
 	margin-top: 20px;
 }
   </style>

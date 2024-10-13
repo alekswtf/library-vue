@@ -1,6 +1,6 @@
 <template>
     <div class="library-wrapper">
-        <FindYourCard/>
+        <FindYourCard @update:isAuthenticated="setIsAuthenticated"/>
         <LibraryCardGetAll
             :openLoginModal="openLoginModal"
             :openRegisterModal="openRegisterModal"

@@ -58,7 +58,7 @@ import AutumnBooks from '@/components/favorites/books/AutumnBooks.vue'
                     return 'WinterBooks'
                 }
             }
-        }
+        },
     }
 </script>
 
@@ -76,7 +76,6 @@ import AutumnBooks from '@/components/favorites/books/AutumnBooks.vue'
 
 
 .radio-container {
-    position: sticky;
     top: 0;
     background-color: $white-color;
     z-index: 2;
@@ -129,6 +128,9 @@ import AutumnBooks from '@/components/favorites/books/AutumnBooks.vue'
 }
 
 @include tablet {
+  .radio-container {
+    position: sticky;
+  }
   .radio-box {
     gap: 90px;
   }

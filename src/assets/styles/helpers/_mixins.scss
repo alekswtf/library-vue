@@ -14,4 +14,16 @@
       border: none;
     }
   }
-  
+
+  @mixin button-styles-own {
+    font-family: $inter;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    color: $brown-color;
+    border: 1px solid $brown-color;
+    border-radius: 2px;
+    width: 75px;
+    height: 30px;
+    cursor: pointer;
+  }  

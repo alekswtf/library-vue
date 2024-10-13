@@ -33,7 +33,9 @@
               type="password" 
               id="passwordReg" 
               name="password" 
-              v-model="password" required>
+              v-model="password" 
+              minlength="8"
+              required>
               <button type="submit">Sign Up</button>
             </form>
             <h5>Already have an account?
@@ -75,6 +77,11 @@
     },
 
     handleRegister() {
+      if (this.password.length < 8) {
+        alert('Password must be at least 8 characters long.');
+        return;
+      }
+      
       let users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
 
       const userExist = users.some(user => user.userEmail === this.userEmail);
@@ -93,7 +100,7 @@
         users.push(newUser);
         localStorage.setItem('registeredUsers', JSON.stringify(users));
 
-        alert('Registration successful!');
+        alert('Registration successful!',);
         console.log('Registering with:', this.userFirstName, this.userLastName, this.userEmail, this.password);
         this.closeModal();
       }

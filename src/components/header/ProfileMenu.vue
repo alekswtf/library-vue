@@ -1,38 +1,24 @@
-<!-- <template>
-<div class="user-profile-badge-wrapper" v-click-outside="closeProfileMenu">
-    <div 
-    class="user-profile-badge" 
-    @click="toggleMenu"
-    >
-    <img src="../../assets/icons/icon_profile.svg" alt="iconProfile">
-    </div>
-
-    <transition name="fade-slide" class="menu-wrapper">
-        <div v-if="isMenuOpen">
-            <DropMenu/>  // :closeProfileMenu="closeProfileMenu" 
-        </div>
-    </transition>
-</div>
-</template> -->
-
 <template>
-    <div class="user-profile-badge-wrapper" v-click-outside="closeProfileMenu">
-        <div @click="toggleMenu">
-            
-            <div v-if="isAuthenticated" class="user-initials">
-                {{ userInitials }}
+    <div>
+        <div class="user-profile-badge-wrapper" v-click-outside="closeProfileMenu">
+            <div @click="toggleMenu">
+                
+                <div v-if="isAuthenticated" class="user-initials">
+                    {{ userInitials }}
+                </div>
+    
+                <div v-else class="user-profile-badge" >
+                    <img src="../../assets/icons/icon_profile.svg" alt="iconProfile">
+                </div>
             </div>
-
-            <div v-else class="user-profile-badge" >
-                <img src="../../assets/icons/icon_profile.svg" alt="iconProfile">
-            </div>
+            <transition name="fade-slide" class="menu-wrapper">
+                <div v-if="isMenuOpen">
+                    <DropMenu/>
+                </div>
+            </transition>
         </div>
-        <transition name="fade-slide" class="menu-wrapper">
-            <div v-if="isMenuOpen">
-                <DropMenu/>
-            </div>
-        </transition>
     </div>
+    
 </template>
 
 
@@ -94,6 +80,7 @@ import DropMenu from '@/components/header/userprofile/DropMenu';
 <style lang="scss" scoped>
 .user-profile-badge-wrapper {
     z-index: 4;
+    position: relative;
 }
 .user-profile-badge {
     cursor: pointer;
@@ -120,6 +107,8 @@ import DropMenu from '@/components/header/userprofile/DropMenu';
     background-color: $white-color;
     color: $brown-color;
     text-transform: uppercase;
+    z-index: 4;
+    position: relative;
     &:hover {
         cursor: pointer;
     }

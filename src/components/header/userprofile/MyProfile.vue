@@ -5,9 +5,7 @@
 			<img src="../../../assets/icons/close_btn.svg" alt="closeBtn">
 			</span>
 			<div class="userProfile">
-			<div class="userAvatar">{{ userAvatar }}
-				<!-- <img src="../../../assets/icons/avatar.png" alt="avatar"> -->
-			</div>
+			<div class="userAvatar">{{ userAvatar }}</div>
 			<div class="userFullName">{{ userFullName }}</div>          
 			</div>
 			<div class="myProfile-info">
@@ -174,6 +172,10 @@ export default {
 		justify-content: center;
 		color:$white-color;
 		.userFullName {
+			font-family: $forum;
+			font-weight: 400;
+			font-size: 20px;
+			line-height: 100%;
 			padding: 5px 10px 5px 10px;
     		margin-top: 10px;
 			background-color: $white-color;
@@ -188,9 +190,10 @@ export default {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-family: $inter;
+		font-family: $forum;
 		font-weight: 400;
 		line-height: 100%;
+		font-size: 20px;
 	}
 }
 

@@ -2,26 +2,176 @@
     <div>
         <div class="find-card">
             <h3>Find your library card</h3>
-            <form action="get" method="get" class="card-form">
-              <div class="card-form-wrapper">
+            <form @submit.prevent="handleSubmit"
+            
+            class="card-form">
+              <div  class="card-form-wrapper">
                 <p>Brooklyn Public Library</p>
                   <div class="card-input">
-                    <input class="card-input-field" type="text" value="" name="readerName" id="readers-name" placeholder="Reader's name" required >
+                    <input class="card-input-field" 
+                    type="text" value="" 
+                    name="firstName" 
+                    v-model="userFirstName"
+                    id="firstName-name" 
+                    placeholder="Reader's name" 
+                    required 
+                    :disabled="isAuthenticated || showTemporaryData"
+                    />
 
-                    <input class="card-input-field" type="number/text" value="" name="cardNumber" id="card-number" placeholder="Card number" required >
+                    <input class="card-input-field" 
+                    type="number/text" 
+                    value="" 
+                    name="cardNumber"
+                    v-model="userCardNumber" 
+                    id="card-number" 
+                    placeholder="Card number" 
+                    required 
+                    :disabled="isAuthenticated || showTemporaryData"
+                    />
                   </div>       
               </div>
   
-              <button class="card-submit-button" type="submit">Check the card</button>
+              <button v-if="!isAuthenticated && !showTemporaryData" 
+              class="card-submit-button" 
+              type="submit">Check the card
+              </button>
+
+                <div v-if="isAuthenticated" class="user-info">
+                  <div class="myProfile-visits">
+                    <h4>Visits</h4>
+                    <img src="../../assets/icons/Union.svg" alt="union">
+                    <span class="visitsCounter">{{ userCounter }}</span>
+                  </div>
+                  <div class="myProfile-bonuses">
+                    <h4>Bonuses</h4>
+                    <img src="../../assets/icons/Star 1.svg" alt="star">
+                    <span class="bonusesCounter">{{ bonuses }}</span>
+                  </div>
+                  <div class="myProfile-books">
+                    <h4>Books</h4>
+                    <img src="../../assets/icons/book.svg" alt="booksIcon">
+                    <span class="booksCounter">{{ books }}</span>
+                  </div>
+                </div>
+
+                <div v-if="showTemporaryData" class="user-info">
+                  <div class="myProfile-visits">
+                    <h4>Visits</h4>
+                    <img src="../../assets/icons/Union.svg" alt="union" />
+                    <span class="visitsCounter">{{ tempUserCounter }}</span>
+                  </div>
+                  <div class="myProfile-bonuses">
+                    <h4>Bonuses</h4>
+                    <img src="../../assets/icons/Star 1.svg" alt="star" />
+                    <span class="bonusesCounter">{{ tempBonuses }}</span>
+                  </div>
+                  <div class="myProfile-books">
+                    <h4>Books</h4>
+                    <img src="../../assets/icons/book.svg" alt="booksIcon" />
+                    <span class="booksCounter">{{ tempBooks }}</span>
+                  </div>
+                </div>
             </form>
           </div>
     </div>
 </template>
 
 <script>
+import { mapState, mapActions  } from 'vuex';
+
     export default {
+
+      data() {
+        return {
+          userFirstName: '',
+          userCardNumber: '',
+          userCounter: 0,
+          bonuses: 0,
+          books: 0,
+          showTemporaryData: false,
+          tempUserCounter: 0,
+          tempBonuses: 0,
+          tempBooks: 0,
+        }
+      },
+
+      created() {
+        this.checkAuthentication();
+      },
+
+      computed: {
+          ...mapState(['isAuthenticated','loggedInUser']),
+        },
+
+
+      watch: {
+            loggedInUser(newVal) {
+              if (newVal) {
+                this.userFirstName = newVal.userFirstName;
+                this.userCardNumber = newVal.cardNumber;
+                this.userCounter = newVal.visits || 0;
+                this.bonuses = newVal.bonuses || 0;
+                this.books = newVal.books || 0;
+              }
+            },
+            isAuthenticated(newVal) {
+              if (!newVal) {
+                this.userFirstName = '';
+                this.userCardNumber = '';
+                this.userCounter = 0;
+                this.bonuses = 0;
+                this.books = 0;
+              }
+            },
+      },
+
+      methods: {
+        ...mapActions(['setIsAuthenticated']),
+
+        checkAuthentication() {
+          const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+          if (loggedInUser) {
+            this.setIsAuthenticated(true);
+            this.userFirstName = loggedInUser.userFirstName;
+            this.userCardNumber = loggedInUser.cardNumber;
+            this.userCounter = loggedInUser.visits || 0;
+            this.bonuses = loggedInUser.bonuses || 0;
+            this.books = loggedInUser.books || 0;
+          }
+        },
+
+
+          handleSubmit() {
+              const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+              const user = registeredUsers.find(
+                (u) => u.cardNumber === this.userCardNumber && u.userFirstName === this.userFirstName
+              );
+
+              if (user) {
+                const userEmailKey = `user-${user.userEmail}`;
+                const userData = JSON.parse(localStorage.getItem(userEmailKey)) || {};
+                this.tempUserCounter = userData || 0;
+                this.tempBonuses = userData.bonuses || 0;
+                this.tempBooks = userData.books || 0;
+                this.showTemporaryData = true;
+
+                setTimeout(() => {
+                  this.showTemporaryData = false;
+                  this.userFirstName = '';
+                  this.userCardNumber = '';
+                  this.tempUserCounter = 0;
+                  this.tempBonuses = 0;
+                  this.tempBooks = 0;
+                }, 5000);
+              } else {
+                alert('User not found in registered');
+                this.userFirstName = '';
+                this.userCardNumber = '';
+              }
+            },
+          },
         
-    }
+}    
 </script>
 
 <style lang="scss" scoped>
@@ -79,9 +229,11 @@
       height: 66px;
       padding: 20px;
       font-family: $forum;
+      color: $brown-color;
       font-size: 30px;
       line-height: 167%;
       letter-spacing: 0.02em;
+      background-color: $white-color ;
     }
 
     .card-submit-button {
@@ -95,6 +247,32 @@
       font-weight: bold;
       font-family: $inter;
       color: $main-color;
+    }
+    .user-info {
+      display: flex;
+      gap: 20px;
+      font-family: $inter;
+      line-height: 100%;
+      letter-spacing: 0.01em;
+      text-transform: capitalize;
+      text-align: center;
+      color: $black-color;
+    }
+    .myProfile-visits, .myProfile-bonuses, .myProfile-books {
+      display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      font-family: $inter;
+      font-size: 10px;
+      line-height: 100%;
+      letter-spacing: 0.01em;
+      text-transform: capitalize;
+      text-align: center;
+      color: $black-color;
+      span {
+        font-size: 10px;
+      }
     }
 }    
 </style>

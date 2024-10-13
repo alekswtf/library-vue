@@ -5,16 +5,16 @@
                 <span>{{ userCardNumber }}</span>
                 <hr>
                 <div class="log-Links">
-                    <div class="profile-myProfile" @click="openMyProfile">My profile</div>
-                    <div class="profile-logOut" @click="logout">Log Out</div>
+                    <div class="profile-myProfile" @click.stop="openMyProfile">My profile</div>
+                    <div class="profile-logOut" @click.stop="logout">Log Out</div>
                 </div>
             </div>
-            <div v-else class="profile-menu-noAuth">
+            <div v-else class="profile-menu-noAuth" >
                 <span>Profile</span>
                 <hr>
                 <div class="log-Links">
-                    <div class="profile-logIn" @click="openLoginModal">Log In</div>
-                    <div class="profile-reg" @click="openRegisterModal">Register</div>
+                    <div class="profile-logIn" @click.stop="openLoginModal">Log In</div>
+                    <div class="profile-reg" @click.stop="openRegisterModal">Register</div>
                 </div>
             </div>
         </div>
@@ -51,11 +51,11 @@ import { mapState, mapActions } from 'vuex'
 
     export default {
         components: {
-        MyProfile,
-        Overlay,
-        LoginModal,
-        RegisterModal,
-    },
+            MyProfile,
+            Overlay,
+            LoginModal,
+            RegisterModal,
+        },
 
     props: {
         closeProfileMenu: {
@@ -85,6 +85,9 @@ import { mapState, mapActions } from 'vuex'
 
 
     methods: {
+        handleClick() {
+            this.$emit('closeMenu');
+        },
         openMyProfile() {
             this.showMyProfile = true;
             this.closeProfileMenu();
