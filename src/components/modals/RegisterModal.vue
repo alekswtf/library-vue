@@ -94,7 +94,8 @@
           userLastName: this.userLastName,
           userEmail: this.userEmail,
           password: this.password,
-          cardNumber: this.generateCardNumber()
+          cardNumber: this.generateCardNumber(),
+          bonuses: this.generateUserBonus(),
         };
 
         users.push(newUser);
@@ -102,6 +103,8 @@
 
         alert('Registration successful!',);
         console.log('Registering with:', this.userFirstName, this.userLastName, this.userEmail, this.password);
+
+        this.handleLogin(newUser);
         this.closeModal();
       }
         this.userFirstName = '';
@@ -109,6 +112,7 @@
         this.userEmail = '';
         this.password = '';
        },
+
        generateCardNumber() {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
@@ -117,11 +121,38 @@
         }
         return result;
        },
+       generateUserBonus() {
+        const numbers = '1234567890';
+        let result = '';
+        for (let i = 0; i < 4; i++) {
+          result +=  numbers[Math.floor(Math.random() * numbers.length)];
+        }
+        return result
+       },
 
 
     switchToLogin() {
       this.$emit('switchToLogin');
-    }
+    },
+
+    handleLogin(user) {
+      this.$store.commit('setIsAuthenticated', true);
+
+      const USER_KEY = `user-${user.userEmail}`;
+      let userCounter = localStorage.getItem(USER_KEY);
+
+      if (userCounter) {
+        user.visits = parseInt(userCounter, 10);
+        user.visits++;
+      } else {
+        user.visits = 1;
+      }
+
+      localStorage.setItem(USER_KEY, user.visits.toString());
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
+
+      this.$emit('update:user', user);
+    },
   }
 }
   </script>

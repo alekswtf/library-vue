@@ -5,35 +5,35 @@
     >
 
         <div class="modal" 
-        :user="loggedInUser"
-        @click.stop>
-          <div class="modal-content-login">
-            <span class="close" @click="closeModal">
-              <img src="../../assets/icons/close_btn.svg" alt="closeBtn">
-            </span>
-            <h2>LOGIN</h2>
-            <form @submit.prevent="handleLogin">
-              <label for="userEmail">E-mail or readers card</label>
-              <input 
-              type="email" 
-              id="userEmail" 
-              name="userEmail" 
-              v-model="userEmail" required>
+          :user="loggedInUser"
+          @click.stop>
+            <div class="modal-content-login">
+              <span class="close" @click="closeModal">
+                <img src="../../assets/icons/close_btn.svg" alt="closeBtn">
+              </span>
+              <h2>LOGIN</h2>
+              <form @submit.prevent="handleLogin">
+                <label for="userEmail">E-mail or readers card</label>
+                <input 
+                type="email" 
+                id="userEmail" 
+                name="userEmail" 
+                v-model="userEmail" required>
 
-              <label for="password">Password:</label>
-              <input 
-              type="password" 
-              id="password" 
-              name="password" 
-              v-model="password" required>
+                <label for="password">Password:</label>
+                <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                v-model="password" required>
 
-              <button type="submit">Log In</button>
-            </form>
-            <h5>Don’t have an account?
-              <span class="register-link" 
-              @click="switchToRegister">Register</span>
-            </h5>
-          </div>
+                <button type="submit">Log In</button>
+              </form>
+              <h5>Don’t have an account?
+                <span class="register-link" 
+                @click="switchToRegister">Register</span>
+              </h5>
+            </div>
         </div>
 
     </Overlay>
@@ -81,7 +81,6 @@
       if (user) {
         alert('Login successful!');
         this.$store.commit('setIsAuthenticated', true);
-        /* this.$emit('update:isAuthenticated', true) */
 
       //счетчик входа в аккаунт.
       

@@ -1,6 +1,9 @@
 <template>
     <div class="library-wrapper">
-        <FindYourCard @update:isAuthenticated="setIsAuthenticated"/>
+        <FindYourCard 
+            :isAuthenticated="isAuthenticated" 
+            :loggedInUser="loggedInUser"
+            />
         <LibraryCardGetAll
             :openLoginModal="openLoginModal"
             :openRegisterModal="openRegisterModal"
@@ -64,8 +67,7 @@ export default {
             }
         },
             computed: {
-                ...mapState(['isAuthenticated']),
-                ...mapState(['loggedInUser']),
+                ...mapState(['isAuthenticated','loggedInUser'])
         },
         methods: {
             openLoginModal() {

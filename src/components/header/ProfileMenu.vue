@@ -81,6 +81,7 @@ import DropMenu from '@/components/header/userprofile/DropMenu';
 .user-profile-badge-wrapper {
     z-index: 4;
     position: relative;
+    margin-right: -30px;
 }
 .user-profile-badge {
     cursor: pointer;
@@ -129,6 +130,13 @@ import DropMenu from '@/components/header/userprofile/DropMenu';
     transform: translateY(-150px);
     opacity: 0;
   } 
+
+ @include tablet {
+    .user-profile-badge-wrapper {
+        margin: 0;
+    }
+  }
+
 </style>
 
 

@@ -19,7 +19,7 @@
 				<div class="myProfile-bonuses">
 					<h4>Bonuses</h4>
 					<img src="../../../assets/icons/Star 1.svg" alt="star">
-					<span class="bonusesCounter">{{ user.bonuses }}</span>
+					<span class="bonusesCounter">{{ userBonuses }}</span>
 				</div>
 				<div class="myProfile-books">
 					<h4>Books</h4>
@@ -55,6 +55,7 @@ export default {
 	data() {
 		return {
 			userCounter: 0,
+			userBonuses: 0,
 			userCardNumber: '',
 			userFullName: '',
 			userAvatar:''
@@ -75,6 +76,7 @@ export default {
 
   created() {
     this.updateUserVisits();
+	this.updateUserBonuses();
 	this.updateUserCardNumber();
 	this.updateUserFullName();
   },
@@ -89,9 +91,18 @@ export default {
       if (loggedInUser && loggedInUser.visits) {
         this.userCounter = loggedInUser.visits;
       } else {
-        console.warn('No visits data found in loggedInUser');
+        console.log('No visits data found in loggedInUser');
       }
     },
+
+	updateUserBonuses() {
+		const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+		if (loggedInUser && loggedInUser.bonuses) {
+			this.userBonuses = loggedInUser.bonuses;
+		} else {
+			console.log('No bonuses data found in loggedInUser');
+		}
+	},
 
 	updateUserCardNumber() {
 			const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
