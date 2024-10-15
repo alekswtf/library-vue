@@ -90,6 +90,7 @@
         alert('Email already registered! Please use another.');
       } else {
         const newUser = {
+          id: Date.now(),
           userFirstName: this.userFirstName,
           userLastName: this.userLastName,
           userEmail: this.userEmail,

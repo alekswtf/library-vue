@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import MyProfile from '@/components/header/userprofile/MyProfile'
-import Overlay from '../../modals/Overlay'
+import MyProfile from '@/components/modals/MyProfile'
+import Overlay from '../modals/Overlay'
 import LoginModal from '@/components/modals/LoginModal';
 import RegisterModal from '@/components/modals/RegisterModal';
 import { mapState, mapActions } from 'vuex'

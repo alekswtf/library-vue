@@ -3,28 +3,28 @@
       <BookCard
         staff="Staff Picks"
         title="The Book Eaters"
-        author="By Sunyi Dean"
+        author="Sunyi Dean"
         description="An Unusual Sci-Fi Story About A Book Eater Woman Who Tries Desperately To Save Her Dangerous Mind-Eater Son From Tradition And Certain Death. Complete With Dysfunctional Family Values, Light Sapphic Romance, And A Strong, Complex Protagonist. Not For The Faint Of Heart."
         :image="book1"
       />
       <BookCard
         staff="Staff Picks"
         title="Cackle"
-        author="By Lou Ureneck"
+        author="Lou Ureneck"
         description="Are Your Halloween Movies Of Choice The Witches Of Eastwick And Practical Magic? Look No Further Than Here - Where A Woman Recovering From A Breakup Moves To A Quaint Town In Upstate New York And Befriends A Beautiful Witch."
         :image="book2"
       />
       <BookCard
         staff="Staff Picks"
-        title="Dante: Poet of the Secular World"
-        author="By Erich Auerbach"
+        title="Dante: Poet Of The Secular World"
+        author="Erich Auerbach"
         description="Auerbach's Engaging Book Places The 'Comedy' Within The Tradition Of Epic, Tragedy, And Philosophy In General, Arguing For Dante's Uniqueness As One Who Raised The Individual And His Drama Of Soul Into Something Of Divine Significance—An Inspired Introduction To Dante's Main Themes."
         :image="book3"
       />
       <BookCard
         staff="Staff Picks"
         title="The Last Queen"
-        author="By Clive Irving"
+        author="Clive Irving"
         description="A Timely And Revelatory New Biography Of Queen Elizabeth (And Her Family) Exploring How The Windsors Have Evolved And Thrived As The Modern World Has Changed Around Them."
         :image="book4"
       />

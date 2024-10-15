@@ -19,7 +19,7 @@
     
   </div>
     <transition name="fade" mode="out-in">
-      <component :is="selectedComponent"></component>
+      <component :is="selectedComponent" :ownedBooks="ownedBooks"></component>
     </transition>
 </div>
 </template>
@@ -34,7 +34,8 @@ import AutumnBooks from '@/components/favorites/books/AutumnBooks.vue'
         data() {
         return {
             selectedSeason: 'Winter',
-            seasons: ['Winter', 'Spring', 'Summer', 'Autumn']
+            seasons: ['Winter', 'Spring', 'Summer', 'Autumn'],
+            ownedBooks: []
             }
         },
         components: {
@@ -59,6 +60,15 @@ import AutumnBooks from '@/components/favorites/books/AutumnBooks.vue'
                 }
             }
         },
+        mounted() {
+          this.checkOwnership();
+        },
+        methods: {
+          checkOwnership() {
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+            this.ownedBooks = loggedInUser.ownedBooks || [];
+          }
+        }
     }
 </script>
 

@@ -2,29 +2,29 @@
     <div class="book-cards">
       <BookCard
         staff="Staff Picks"
-        title="CRUDE: A MEMOIR"
-        author="By Pablo Fajardo & ​​Sophie Tardy-Joubert"
+        title="Crude: A Memoir"
+        author="Pablo Fajardo & ​​Sophie Tardy-Joubert"
         description="Drawing and color by Damien Roudeau | This book illustrates the struggles of a group of indigenous Ecuadoreans as they try to sue the ChevronTexaco company for damage their oil fields did to the Amazon and her people."
         :image="book1"
       />
       <BookCard
         staff="Staff Picks"
-        title="MY PEOPLE GO SURFING"
-        author="By Yvon Chouinard"
+        title="My People Go Surfing"
+        author="Yvon Chouinard"
         description="Chouinard—climber, businessman, environmentalist—shares tales of courage and persistence from his experience of founding and leading Patagonia, Inc. Full title: Let My People Go Surfing: The Education of a Reluctant Businessman, Including 10 More Years of Business Unusual."
         :image="book2"
       />
       <BookCard
         staff="Staff Picks"
-        title="THE OCTOPUS MUSEUM: POEMS"
-        author="By Brenda Shaughnessy"
+        title="The Octopus Museum: Poems"
+        author="Brenda Shaughnessy"
         description="This collection of bold and scathingly beautiful feminist poems imagines what comes after our current age of environmental destruction, racism, sexism, and divisive politics."
         :image="book3"
       />
       <BookCard
         staff="Staff Picks"
-        title="SHARK DIALOGUES: A NOVEL"
-        author="By Kiana Davenport"
+        title="Shark Dialogues: A Novel"
+        author="Kiana Davenport"
         description="An epic saga of seven generations of one family encompasses the tumultuous history of Hawaii as a Hawaiian woman gathers her four granddaughters together in an erotic tale of villains and dreamers, queens and revolutionaries, lepers and healers."
         :image="book4"
       />

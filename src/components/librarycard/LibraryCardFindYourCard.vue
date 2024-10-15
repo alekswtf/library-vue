@@ -51,7 +51,7 @@
                   <div class="myProfile-books">
                     <h4>Books</h4>
                     <img src="../../assets/icons/book.svg" alt="booksIcon">
-                    <span class="booksCounter">{{ books }}</span>
+                    <span class="booksCounter">{{ userBooks }}</span>
                   </div>
                 </div>
 
@@ -81,16 +81,23 @@
 import { mapState, mapActions  } from 'vuex';
 
     export default {
-/*       props: {
-    isAuthenticated: Boolean,
-    loggedInUser: Object,
-  }, */
+      /* props: {
+        user: {
+          type: Object,
+          default: () => ({}),
+        },
+        isVisible: {
+          type: Boolean,
+          required: true
+        },
+      }, */
       data() {
         return {
           userFirstName: '',
           userCardNumber: '',
           userCounter: 0,
           userBonuses: 0,
+          userBooks: 0,
           books: 0,
           showTemporaryData: false,
           tempUserCounter: 0,
@@ -115,7 +122,7 @@ import { mapState, mapActions  } from 'vuex';
                 this.userCardNumber = newVal.cardNumber;
                 this.userCounter = newVal.visits || 0;
                 this.userBonuses = newVal.bonuses || 0;
-                this.books = newVal.books || 0;
+                this.userBooks = newVal.ownedBooks.length || 0;
               }
             },
             isAuthenticated(newVal) {
@@ -124,7 +131,9 @@ import { mapState, mapActions  } from 'vuex';
                 this.userCardNumber = '';
                 this.userCounter = 0;
                 this.userBonuses = 0;
-                this.books = 0;
+                this.userBooks = 0;
+              } else {
+                this.checkAuthentication();
               }
             },
       },
@@ -140,7 +149,8 @@ import { mapState, mapActions  } from 'vuex';
             this.userCardNumber = loggedInUser.cardNumber;
             this.userCounter = loggedInUser.visits || 0;
             this.userBonuses = loggedInUser.bonuses || 0;
-            this.books = loggedInUser.books || 0;
+            this.userBooks = loggedInUser.ownedBooks.length || 0;
+
           }
         },
 
@@ -155,7 +165,7 @@ import { mapState, mapActions  } from 'vuex';
                 const userDataCounter = JSON.parse(localStorage.getItem(userEmailKey)) || {};
                 this.tempUserCounter = userDataCounter || 0;
                 this.tempBonuses = user.bonuses || 0;
-                this.tempBooks = user.books || 0;
+                this.tempBooks = user.ownedBooks.length || 0;
                 this.showTemporaryData = true;
 
                 setTimeout(() => {
@@ -165,11 +175,11 @@ import { mapState, mapActions  } from 'vuex';
                   this.tempUserCounter = 0;
                   this.tempBonuses = 0;
                   this.tempBooks = 0;
-                }, 5000);
+                }, 10000);
               } else {
                 alert('User not found in registered');
-                this.userFirstName = '';
-                this.userCardNumber = '';
+                  this.userFirstName = '';
+                  this.userCardNumber = '';
               }
             },
           },

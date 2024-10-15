@@ -43,7 +43,7 @@
 
 <script>
 import LibraryCardGetAll from '@/components/librarycard/LibraryCardGetAll'
-import MyProfile from '@/components/header/userprofile/MyProfile'
+import MyProfile from '@/components/modals/MyProfile'
 import Overlay from '@/components/modals/Overlay.vue'
 import FindYourCard from '@/components/librarycard/LibraryCardFindYourCard'
 import LoginModal from '@/components/modals/LoginModal';

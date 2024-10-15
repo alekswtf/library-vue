@@ -5,10 +5,10 @@
             <h3>{{ staff }}</h3>
             <hr>
             <h4>{{ title }}</h4>
-			<h5>{{ author }}</h5>
+			<h5>By {{ author }}</h5>
             <p>{{ description }}</p>
-            <button  class="card-button" @click="handleBuyClick">Buy</button> 
-			<!-- <button  class="card-button-own" @click="openBuyCard">Own</button> -->
+            <button v-if="!isOwned" class="card-button" @click="handleBuyClick">Buy</button> 
+			<button v-else @click="handleOwnClick" class="card-button-own">Own</button>
         </div>
         <img :src="image" :alt="title">
         </div>
@@ -36,7 +36,7 @@
   </template>
   
   <script>
-  import BuyCard from '@/components/favorites/books/BuyALibraryCard.vue'
+  import BuyCard from '@/components/modals/BuyALibraryCard.vue'
   import LoginModal from '@/components/modals/LoginModal.vue'
   import RegisterModal from '@/components/modals/RegisterModal'
   import { mapState } from 'vuex';
@@ -75,19 +75,55 @@
 			return {
 				showBuyCard: false,
 				showLoginModal: false,
-				showRegisterModal: false
+				showRegisterModal: false,
+				isOwned: false,
+				ownedBooks: []
 			}
 		},
 
 		methods: {
+
 			handleBuyClick() {
-				console.log('handleBuyClick called');
 				if (this.isAuthenticated) {
-					this.openBuyCard();
+					const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+					if (loggedInUser.bankCardNumber) {
+						this.addOwnedBook();
+					} else {
+						this.openBuyCard();
+					}
 				} else {
 					this.openLoginModal();
 				}
 			},
+			handleOwnClick() {
+				alert('You already own this book!');
+			},
+
+			addOwnedBook() {
+				const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+				const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+				const currentUserIndex = registeredUsers.findIndex(user => user.id === loggedInUser.id);
+
+				if (currentUserIndex !== -1) {
+					if (!registeredUsers[currentUserIndex].ownedBooks) {
+					registeredUsers[currentUserIndex].ownedBooks = [];
+					}
+					registeredUsers[currentUserIndex].ownedBooks.push({ title: this.title, author: this.author });
+					localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+
+					const updatedLoggedInUser = {
+						...loggedInUser,
+						ownedBooks: registeredUsers[currentUserIndex].ownedBooks
+					};
+					localStorage.setItem('loggedInUser', JSON.stringify(updatedLoggedInUser));
+
+					this.isOwned = true;
+				} else {
+					alert('User not found in registered users!');
+				}
+			},
+
+
 			openBuyCard() {
 				this.showBuyCard = true;
 			},
@@ -111,19 +147,50 @@
 			closeRegisterModal() {
 				this.showRegisterModal = false;
 			},
+
 			handleAuthentication(isAuthenticated) {
 				this.$store.commit('setAuthenticated', isAuthenticated);
 				if (isAuthenticated) {
 					this.closeLoginModal();
 					this.openBuyCard();
+				} else {
+					this.resetOwnership();
 				}
+			},
+
+			checkOwnership() {
+				const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+				const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+				const currentUserIndex = registeredUsers.findIndex(user => user.id === loggedInUser.id);
+
+				if (currentUserIndex !== -1 && registeredUsers[currentUserIndex].ownedBooks) {
+					this.isOwned = registeredUsers[currentUserIndex].ownedBooks.some(book => book.title === this.title && book.author === this.author);
+				}
+			},
+			resetOwnership() {
+				this.isOwned = false;
 			}
+			
+
 		},
 
 		computed: {
 			...mapState(['isAuthenticated']),
 			...mapState(['loggedInUser']),
 		},
+		watch: {
+			isAuthenticated(newValue) {
+				if (!newValue) {
+					this.resetOwnership();
+				} else {
+					this.checkOwnership();
+				}
+			}
+		},
+
+		mounted() {
+			this.checkOwnership();
+		}
 
 }
 

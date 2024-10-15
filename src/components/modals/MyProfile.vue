@@ -2,7 +2,7 @@
 	<div class="my-profile-wrapper" v-if="isVisible" @click.stop>
 		<div class="myProfile-card" >
 			<span class="close" @click="closeModal">
-			<img src="../../../assets/icons/close_btn.svg" alt="closeBtn">
+			<img src="../../assets/icons/close_btn.svg" alt="closeBtn">
 			</span>
 			<div class="userProfile">
 			<div class="userAvatar">{{ userAvatar }}</div>
@@ -13,34 +13,32 @@
 				<div class="userCounter-wrapper">
 				<div class="myProfile-visits">
 					<h4>Visits</h4>
-					<img src="../../../assets/icons/Union.svg" alt="union">
+					<img src="../../assets/icons/Union.svg" alt="union">
 					<span class="visitsCounter">{{ userCounter }}</span>
 				</div>
 				<div class="myProfile-bonuses">
 					<h4>Bonuses</h4>
-					<img src="../../../assets/icons/Star 1.svg" alt="star">
+					<img src="../../assets/icons/Star 1.svg" alt="star">
 					<span class="bonusesCounter">{{ userBonuses }}</span>
 				</div>
 				<div class="myProfile-books">
 					<h4>Books</h4>
-					<img src="../../../assets/icons/book.svg" alt="booksIcon">
-					<span class="booksCounter">{{ user.books }}</span>
+					<img src="../../assets/icons/book.svg" alt="booksIcon">
+					<span class="booksCounter">{{ userBooks }}</span>
 				</div>
 				</div>
 				
 			<div class="myProfile-rented">
 				<h3>Rented books</h3>
 				<ul class="rentedBooks">
-					
-					<li v-for="book in user.rentedBooks" :key="book">{{ book }}</li>
-				<li>The Last Queen, Clive Irving</li>
-				<li>Dominicana, Angie Cruz</li>
+					<li v-for="book in ownedBooks" :key="book.title">{{ book.title }}, {{ book.author }}</li>
 				</ul>
+
 			</div>
 			<div class="myProfile-cardNumber">
 				<h4>Card number</h4>
 				<span class="userCardNumber">{{ userCardNumber }}</span>
-				<img src="../../../assets/icons/icon copy.svg" alt="copyIcon" @click="copyCardNumber">
+				<img src="../../assets/icons/icon copy.svg" alt="copyIcon" @click="copyCardNumber">
 			</div>
 			</div>
 		</div>
@@ -56,9 +54,11 @@ export default {
 		return {
 			userCounter: 0,
 			userBonuses: 0,
+			userBooks: 0,
 			userCardNumber: '',
 			userFullName: '',
-			userAvatar:''
+			userAvatar:'',
+			ownedBooks: []
 		}
 },
 
@@ -79,6 +79,7 @@ export default {
 	this.updateUserBonuses();
 	this.updateUserCardNumber();
 	this.updateUserFullName();
+	this.updateOwnedBooks();
   },
 
   methods: {
@@ -129,22 +130,35 @@ export default {
 				this.userFullName = `${userData.userFirstName} ${userData.userLastName}`;
 				this.userAvatar = `${userData.userFirstName[0]}${userData.userLastName[0]}`.toUpperCase();
 			} else {
-				console.warn('No fullName data found in localStorage');
+				console.log('No fullName data found in localStorage');
 			}
-		}
-		
-},
+		},
 
-  watch: {
-    user: {
-      handler(newUser) {
-        this.updateUserVisits();
-		this.updateUserCardNumber();
-		this.updateUserFullName();
-      },
-      deep: true
-    }
-  }
+		updateOwnedBooks() {
+			const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers'));
+			const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+			if (registeredUsers && loggedInUser) {
+				const user = registeredUsers.find(u => u.id === loggedInUser.id);
+				if (user && user.ownedBooks) {
+					this.ownedBooks = user.ownedBooks;
+					this.userBooks = user.ownedBooks.length;
+				} return;
+			} 
+		},
+	},
+		
+
+	watch: {
+		user: {
+		handler(newUser) {
+			this.updateUserVisits();
+			this.updateUserCardNumber();
+			this.updateUserFullName();
+			this.updateOwnedBooks();
+		},
+		deep: true
+		}
+	}
 };
 
 </script>
@@ -153,7 +167,6 @@ export default {
 
 .myProfile-card {
 	width: 600px;
-	height: 400px;
 	position: fixed;
     top: 50%;
     left: 50%;
@@ -173,7 +186,7 @@ export default {
 	}
 	.userProfile {
 		width: 170px;
-		height: 400px;
+		height: 100%;
 		padding: 10px;
 		background-color: $main-color;
 		position: absolute;
@@ -262,6 +275,8 @@ export default {
 	ul {
 		list-style: initial;
 		margin: 30px 0px 0px 40px;
+		text-transform: lowercase, capitalize;
+		font-size: 20px;
 	}
 
 	h3 {

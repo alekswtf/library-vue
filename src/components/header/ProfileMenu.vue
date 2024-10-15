@@ -24,7 +24,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import DropMenu from '@/components/header/userprofile/DropMenu';
+import DropMenu from '@/components/header/DropMenu';
 
     export default {
         components: {

@@ -6,32 +6,86 @@
     <div class="buyCard" @click.stop>
         <h2>Buy a library card</h2>
         <span class="close" @click="closeModal">
-			<img src="../../../assets/icons/close_btn_white.svg" alt="closeBtn">
+			<img src="../../assets/icons/close_btn_white.svg" alt="closeBtn">
 		</span>
         
         <div class="buyCard-wrapper">
-          <form action="#" method="get" class="buyCardForm">
+          <form @submit.prevent="handleSubmit" id="buyCardForm" class="buyCardForm">
             <label for="bankCardNumber">Bank card number</label>
-            <input type="text" name="bankCardNumber" id="bankCardNumber" pattern="\d{4}\s\d{4}\s\d{4}\s\d{4}" required>
+            <input 
+				type="text" 
+				name="bankCardNumber" 
+				id="bankCardNumber" 
+				v-model="bankCardNumber"
+				pattern="\d{4}\s\d{4}\s\d{4}\s\d{4}"
+				maxlength="19"
+				required
+			/>
             
             <div class="buyCard-expirationCode">
               <label for="expirationCode">Expiration Code</label>
               <div class="expirationCode-wrapper">
-                  <input type="text" name="expirationCodeMonth" id="expirationCodeMonth" class="expirationCodeMonth" pattern="[0-9]{2}" required>
-                  <input type="text" name="expirationCodeYear" id="expirationCodeYear" class="expirationCodeYear" pattern="[0-9]{2}" required>
+                  <input 
+				  	type="text" 
+					name="expirationCodeMonth" 
+					id="expirationCodeMonth" 
+					v-model="expirationCodeMonth"
+					class="expirationCodeMonth" 
+					pattern="(0[1-9]|1[0-2])"
+					maxlength="2"	
+					required
+					/>
+
+                  <input 
+				  		type="text" 
+						name="expirationCodeYear" 
+						id="expirationCodeYear" 
+						v-model="expirationCodeYear"
+						class="expirationCodeYear" 
+						pattern="\d{2}" 
+						maxlength="2"	
+						required
+					/>
               </div>
             </div>
                 <label for="cvcCode">CVC</label>
-                  <input type="text" name="cvcCode" id="cvcCode" class="cvcCode" pattern="[0-9]{3}" required>
+                  <input 
+				  	type="text" 
+					name="cvcCode" 
+					id="cvcCode" 
+					v-model="cvcCode"
+					class="cvcCode" 
+					pattern="[0-9]{3}"
+					maxlength="3"
+					required
+				  />
 
                   <label for="cardHolder">Cardholder name</label>
-                  <input type="text" name="cardHolder" id="cardHolder" required>
+                  <input 
+				  	type="text" 
+					name="cardHolder" 
+					id="cardHolder" 
+					v-model="cardHolder"
+					required
+				  />
   
                   <label for="postalCode">Postal Code</label>
-                  <input type="text" name="postalCode" id="postalCode" required>
+                  <input 
+				  	type="number" 
+					name="postalCode" 
+					id="postalCode" 
+					v-model="postalCode"
+					required
+				  />
   
                   <label for="cityTown">City / Town</label>
-                  <input type="text" name="cityTown" id="cityTown" required>
+                  <input 
+				  	type="text" 
+					name="cityTown" 
+					id="cityTown" 
+					v-model="cityTown"
+					required
+				  />
                
                   <div class="buyCardPrice">
                       <button type="submit" form="buyCardForm">Buy</button>
@@ -54,11 +108,11 @@
 <script>
 import Overlay from '@/components/modals/Overlay.vue'
 
-    export default {
-		components: {
+export default {
+	components: {
 			Overlay
 			},
-		props: {
+	props: {
 			isVisible: {
 				type: Boolean,
 				required: true,
@@ -67,19 +121,81 @@ import Overlay from '@/components/modals/Overlay.vue'
 				type: Object,
 				default: () => ({}),
 			}
-		},  
-		data() {
+		}, 
+
+	data() {
 			return {
-
-			}
+				bankCardNumber: '',
+				expirationCodeMonth: '',
+				expirationCodeYear: '',
+				cvcCode: '',
+				cardHolder: '',
+				postalCode: '',
+				cityTown: '',
+			};
 		},
-		methods: {
-			closeModal() {
+
+	methods: {
+		closeModal() {
 				this.$emit('close');
-			}
-		},
+			},
 
+		handleSubmit() {
+			const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+			const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+			const userData = {
+				bankCardNumber: this.bankCardNumber,
+				expirationCodeMonth: this.expirationCodeMonth,
+				expirationCodeYear: this.expirationCodeYear,
+				cvcCode: this.cvcCode,
+				cardHolder: this.cardHolder,
+				postalCode: this.postalCode,
+				cityTown: this.cityTown,
+			};
+
+				if (
+					!/^\d{4}\s\d{4}\s\d{4}\s\d{4}$/.test(userData.bankCardNumber) ||
+					!/^\d{3}$/.test(userData.cvcCode) ||
+					!/^\d{2}$/.test(userData.expirationCodeMonth) ||
+					!/^\d{2}$/.test(userData.expirationCodeYear)
+				) {
+					alert('Please enter valid card details!');
+					return;
+				}
+
+			const currentUserIndex = registeredUsers.findIndex(user => user.id === loggedInUser.id);
+
+				if (currentUserIndex !== -1) {
+					registeredUsers[currentUserIndex] = {
+						...registeredUsers[currentUserIndex],
+						...userData,
+					};
+						
+				localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+
+					const updatedLoggedInUser = {
+							...loggedInUser,
+							...userData,
+						};
+				localStorage.setItem('loggedInUser', JSON.stringify(updatedLoggedInUser));
+
+					this.bankCardNumber = '';
+					this.expirationCodeMonth = '';
+					this.expirationCodeYear = '';
+					this.cvcCode = '';
+					this.cardHolder = '';
+					this.postalCode = '';
+					this.cityTown = '';
+
+					this.closeModal();
+				} else {
+				alert('User not found in registered users!');
+			}
+			
+		},
+	}
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -192,5 +308,15 @@ import Overlay from '@/components/modals/Overlay.vue'
 		letter-spacing: 0.13em;
 		color: $grey-color;
 	}
+}
+
+	input[type="number"]::-webkit-outer-spin-button,
+	input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+	}
+
+	input[type="number"] {
+  -moz-appearance: textfield;
 }
 </style>
