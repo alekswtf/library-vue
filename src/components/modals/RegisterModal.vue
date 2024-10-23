@@ -115,7 +115,7 @@
        },
 
        generateCardNumber() {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const characters = '0123456789ABCDEF';
         let result = '';
         for (let i = 0; i < 9; i++) {
           result += characters.charAt(Math.floor(Math.random() * characters.length));
